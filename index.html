@@ -1,0 +1,38 @@
+<html><head>
+<script>
+var mousePosition;
+
+var dragging = null;
+var offset = [0,0];
+document.addEventListener('mousedown', function(e) {
+    dragging = e.target;
+    offset = [
+        dragging.offsetLeft - e.clientX,
+        dragging.offsetTop - e.clientY
+    ];
+}, true);
+
+document.addEventListener('mouseup', function() {
+    dragging = null ;
+}, true);
+
+document.addEventListener('mousemove', function(event) {
+    event.preventDefault();
+    if ( dragging ) {
+        mousePosition = {
+            x : event.clientX,
+            y : event.clientY
+        };
+        dragging.style.left = ( mousePosition.x + offset[0] ) + 'px';
+        dragging.style.top  = ( mousePosition.y + offset[1] ) + 'px';
+    }
+}, true);
+</script>
+</head>
+  <body style="overflow: hidden;">
+  <div id="Anchor" style="position: absolute; width: 10px; height: 10px; left: 3397px; top: 1798px;">
+    <div class="window" style="position: absolute; width: 100px; height: 100px; background: red; color: blue; left: -2984px; top: -1445px;"></div>
+    <div class="window" style="position: absolute; width: 100px; height: 100px; background: red; color: blue; left: -2760px; top: -1234px;"></div>
+    <div class="window" style="position: absolute; width: 100px; height: 100px; background: red; color: blue; left: 2960px; top: 758px;"></div>
+  </div>
+</body></html>
