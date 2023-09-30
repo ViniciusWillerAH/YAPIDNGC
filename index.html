@@ -10,11 +10,29 @@ if( !Anchor_dom ) {
     for( var a=0;a<3;a++) {
         var childrenDOM = document.createElement("div");
         childrenDOM.classList.add("Window")
-        childrenDOM.style = "height: 30px; width: 30px; position: relative; background-color: red; left: 37px; top: 40px;";
+        childrenDOM.style = "height: fit-content; width: fit-content; position: absolute; background-color: red; left: 37px; top: 40px;";
+        childrenDOM.innerHTML = `<table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="999">Function Title</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>○⚪</td>
+                                      <td>input</td>
+                                      <td>-</td>
+                                      <td>output</td>
+                                      <td>●⚫</td>
+                                    </tr>
+                                  </tbody>
+                                </table>`
         Anchor_dom.appendChild( childrenDOM )
     }
 }
-Anchor_dom.style  = "height: 10px; width: 10px; position: relative; background-color: blue; left: 37px; top: 40px;";
+Anchor_dom.style  = "position: absolute;background-color: red;left: 0px;top: 0px;width: 3px;height: 3px;";
+
+
 
 var Anchor_dragging = null;
 var Anchor_offset = [0,0];
@@ -25,28 +43,28 @@ var Item_offset = [0,0];
 document.onmousedown = function(e) {
     console.log(  "MD_A" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
     Element_Clicked = e.target;
-    // mousePosition = {
-    //     x : event.clientX,
-    //     y : event.clientY
-    // };
-    // if( ( Element_Clicked == document.body || Element_Clicked == document ) && e.button == 2 ){
     if( e.button == 2 ){
         Anchor_offset = [
             Anchor_dom.offsetLeft - e.clientX
            ,Anchor_dom.offsetTop - e.clientY
         ];
         Anchor_dragging = Anchor_dom;
-        // document.onmousemove(e);
     } else if( Element_Clicked == document.body || Element_Clicked == document )  {
-        
+        return
     } else {
+        while(1){
+            if( Element_Clicked == document.body || Element_Clicked == document )
+                return;
+            if( Element_Clicked.classList.contains("Window") )
+                break;
+            Element_Clicked = Element_Clicked.parentElement;
+        }
         Item_offset = [
             Element_Clicked.offsetLeft - e.clientX + Anchor_offset[0]
            ,Element_Clicked.offsetTop - e.clientY + Anchor_offset[1]
         ];
         Item_dragging = Element_Clicked;
     }
-    
     document.onmousemove(e);
     console.log( "MD_B" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
 }
@@ -59,12 +77,12 @@ document.body.oncontextmenu = function(e) {
 
 document.onmouseup = function(e) {
     console.log( "MU_A" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
-    
+   
     Item_dragging = null ;
     Item_offset = [0,0];
     Anchor_dragging = null ;
     Anchor_offset = [0,0];
-    
+   
     console.log( "MU_B" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
 }
 
@@ -77,12 +95,12 @@ document.onmousemove = function(event) {
     if ( Anchor_dragging ) {
         Anchor_dragging.style.left = ( mousePosition.x + Anchor_offset[0] ) + 'px';
         Anchor_dragging.style.top  = ( mousePosition.y + Anchor_offset[1] ) + 'px';
-        
+       
     }
     if ( Item_dragging ) {
         Item_dragging.style.left = ( mousePosition.x + Item_offset[0] - Anchor_offset[0] ) + 'px';
         Item_dragging.style.top  = ( mousePosition.y + Item_offset[1] - Anchor_offset[1] ) + 'px';
-        
+       
     }
 }
 </script>
