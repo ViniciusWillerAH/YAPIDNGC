@@ -1,0 +1,110 @@
+<html><head>
+<script>
+var mousePosition = [0,0];
+
+var Anchor_dom = document.getElementById("Anchor");
+if( !Anchor_dom ) {
+    Anchor_dom = document.createElement("div");
+    Anchor_dom.id = "Anchor"
+    document.body.appendChild( Anchor_dom )
+    for( var a=0;a<3;a++) {
+        var childrenDOM = document.createElement("div");
+        childrenDOM.classList.add("Window")
+        childrenDOM.style = "height: fit-content; width: fit-content; position: absolute; background-color: red; left: 37px; top: 40px;";
+        childrenDOM.innerHTML = `<table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="999">Function Title</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>○⚪</td>
+                                      <td>input</td>
+                                      <td>-</td>
+                                      <td>output</td>
+                                      <td>●⚫</td>
+                                    </tr>
+                                  </tbody>
+                                </table>`
+        Anchor_dom.appendChild( childrenDOM )
+    }
+}
+Anchor_dom.style  = "position: absolute;background-color: red;left: 0px;top: 0px;width: 3px;height: 3px;";
+
+
+
+var Anchor_dragging = null;
+var Anchor_offset = [0,0];
+
+var Item_dragging = null;
+var Item_offset = [0,0];
+
+document.onmousedown = function(e) {
+    console.log(  "MD_A" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
+    Element_Clicked = e.target;
+    if( e.button == 2 ){
+        Anchor_offset = [
+            Anchor_dom.offsetLeft - e.clientX
+           ,Anchor_dom.offsetTop - e.clientY
+        ];
+        Anchor_dragging = Anchor_dom;
+    } else if( Element_Clicked == document.body || Element_Clicked == document )  {
+        return
+    } else {
+        while(1){
+            if( Element_Clicked == document.body || Element_Clicked == document )
+                return;
+            if( Element_Clicked.classList.contains("Window") )
+                break;
+            Element_Clicked = Element_Clicked.parentElement;
+        }
+        Item_offset = [
+            Element_Clicked.offsetLeft - e.clientX + Anchor_offset[0]
+           ,Element_Clicked.offsetTop - e.clientY + Anchor_offset[1]
+        ];
+        Item_dragging = Element_Clicked;
+    }
+    document.onmousemove(e);
+    console.log( "MD_B" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
+}
+
+document.body.oncontextmenu = function(e) {
+    if(!e.shiftKey){
+        e.preventDefault()
+    }
+}
+
+document.onmouseup = function(e) {
+    console.log( "MU_A" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
+   
+    Item_dragging = null ;
+    Item_offset = [0,0];
+    Anchor_dragging = null ;
+    Anchor_offset = [0,0];
+   
+    console.log( "MU_B" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
+}
+
+document.onmousemove = function(event) {
+    event.preventDefault();
+    mousePosition = {
+        x : event.clientX,
+        y : event.clientY
+    };
+    if ( Anchor_dragging ) {
+        Anchor_dragging.style.left = ( mousePosition.x + Anchor_offset[0] ) + 'px';
+        Anchor_dragging.style.top  = ( mousePosition.y + Anchor_offset[1] ) + 'px';
+       
+    }
+    if ( Item_dragging ) {
+        Item_dragging.style.left = ( mousePosition.x + Item_offset[0] - Anchor_offset[0] ) + 'px';
+        Item_dragging.style.top  = ( mousePosition.y + Item_offset[1] - Anchor_offset[1] ) + 'px';
+       
+    }
+}
+</script>
+</head>
+  <body style="overflow: hidden;">
+  </div>
+</body></html>
