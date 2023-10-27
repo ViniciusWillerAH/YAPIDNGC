@@ -1,110 +1,37 @@
-<html><head>
-<script>
-var mousePosition = [0,0];
-
-var Anchor_dom = document.getElementById("Anchor");
-if( !Anchor_dom ) {
-    Anchor_dom = document.createElement("div");
-    Anchor_dom.id = "Anchor"
-    document.body.appendChild( Anchor_dom )
-    for( var a=0;a<3;a++) {
-        var childrenDOM = document.createElement("div");
-        childrenDOM.classList.add("Window")
-        childrenDOM.style = "height: fit-content; width: fit-content; position: absolute; background-color: red; left: 37px; top: 40px;";
-        childrenDOM.innerHTML = `<table>
-                                  <thead>
-                                    <tr>
-                                      <th colspan="999">Function Title</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td>○⚪</td>
-                                      <td>input</td>
-                                      <td>-</td>
-                                      <td>output</td>
-                                      <td>●⚫</td>
-                                    </tr>
-                                  </tbody>
-                                </table>`
-        Anchor_dom.appendChild( childrenDOM )
-    }
-}
-Anchor_dom.style  = "position: absolute;background-color: red;left: 0px;top: 0px;width: 3px;height: 3px;";
-
-
-
-var Anchor_dragging = null;
-var Anchor_offset = [0,0];
-
-var Item_dragging = null;
-var Item_offset = [0,0];
-
-document.onmousedown = function(e) {
-    console.log(  "MD_A" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
-    Element_Clicked = e.target;
-    if( e.button == 2 ){
-        Anchor_offset = [
-            Anchor_dom.offsetLeft - e.clientX
-           ,Anchor_dom.offsetTop - e.clientY
-        ];
-        Anchor_dragging = Anchor_dom;
-    } else if( Element_Clicked == document.body || Element_Clicked == document )  {
-        return
-    } else {
-        while(1){
-            if( Element_Clicked == document.body || Element_Clicked == document )
-                return;
-            if( Element_Clicked.classList.contains("Window") )
-                break;
-            Element_Clicked = Element_Clicked.parentElement;
-        }
-        Item_offset = [
-            Element_Clicked.offsetLeft - e.clientX + Anchor_offset[0]
-           ,Element_Clicked.offsetTop - e.clientY + Anchor_offset[1]
-        ];
-        Item_dragging = Element_Clicked;
-    }
-    document.onmousemove(e);
-    console.log( "MD_B" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
-}
-
-document.body.oncontextmenu = function(e) {
-    if(!e.shiftKey){
-        e.preventDefault()
-    }
-}
-
-document.onmouseup = function(e) {
-    console.log( "MU_A" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
-   
-    Item_dragging = null ;
-    Item_offset = [0,0];
-    Anchor_dragging = null ;
-    Anchor_offset = [0,0];
-   
-    console.log( "MU_B" , mousePosition.x , " - " ,  mousePosition.y , " - " , Item_offset , Anchor_offset , mousePosition , Anchor_dragging , e )
-}
-
-document.onmousemove = function(event) {
-    event.preventDefault();
-    mousePosition = {
-        x : event.clientX,
-        y : event.clientY
-    };
-    if ( Anchor_dragging ) {
-        Anchor_dragging.style.left = ( mousePosition.x + Anchor_offset[0] ) + 'px';
-        Anchor_dragging.style.top  = ( mousePosition.y + Anchor_offset[1] ) + 'px';
-       
-    }
-    if ( Item_dragging ) {
-        Item_dragging.style.left = ( mousePosition.x + Item_offset[0] - Anchor_offset[0] ) + 'px';
-        Item_dragging.style.top  = ( mousePosition.y + Item_offset[1] - Anchor_offset[1] ) + 'px';
-       
-    }
-}
-</script>
+<html lang="en" class="sr"><head>
+<title> SeiLá Backups </title>
+<meta charset="utf-8">
+<style data-tag="reset-style-sheet">
+html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }
+</style>
 </head>
-  <body style="overflow: hidden;">
-  </div>
-</body></html>
+<body style="height: 100%;width: 100%;display: flex;align-items: center;flex-direction: column;background-color: #ffffff;">  <header style="  width: 100%;  height: 50px;  display: flex;  z-index: 100;  align-self: center;  align-items: center;  justify-content: space-between;  background: #000;  color: #fff;">
+<h2 style="  font-size: 32px;  font-style: normal;  font-weight: 600;  line-height: 45px;">{{{PageName}}}</h2>
+<nav style="  gap: 30px;  flex: 0 0 auto;  display: flex;  align-items: center;  flex-direction: row;  padding-right: 40px;">
+<span class="navLink">Status</span>
+<span class="navLink">Current</span>
+<span class="navLink">Backups</span></nav>
+
+
+</header>
+<div id="content" style="height: 100vh;overflow-y: scroll;"><div style="padding: 100px;">
+Esse programa tem absulutamente porra nenhuma. 
+<br>
+faça o seguinte. clique nos menus acimas e decida voce mesmo.
+
+</div>
+</div>
+<footer style="width: 100%;height: auto;display: flex;align-items: center;flex-direction: column;color: #FFF;background: #000;">
+<span>{{{ Footer.text }}}</span>
+<div style="width: 100%;display: flex;max-width: 600px;align-self: center;align-items: center;flex-direction: row;justify-content: center;">
+<img alt="image" src="public/linkedin.svg">
+<img alt="image" src="public/instagram.svg">
+<img alt="image" src="public/twitter.svg">
+</div>
+<span>
+Privacy — Terms &amp; Conditions — Code of Conduct © {{{
+datetime.year }}} No Rights Reserved
+</span>
+</footer>
+</body>
+</html>
