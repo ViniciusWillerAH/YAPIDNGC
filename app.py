@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[57]:
+# In[20]:
 
 
 try:
@@ -14,7 +14,7 @@ except:
     get_ipython().system('move __main__.py app.py')
 
 
-# In[40]:
+# In[2]:
 
 
 import time
@@ -22,7 +22,7 @@ _ScriptStartAt = time.time()
 now = lambda:datetime.datetime.now().strftime("%Y%m%d%H%M%S_%f")
 
 
-# In[41]:
+# In[3]:
 
 
 config = {
@@ -32,7 +32,7 @@ config = {
 } 
 
 
-# In[42]:
+# In[4]:
 
 
 def spawn2stdout(cmd):
@@ -52,7 +52,7 @@ def spawn2stdout(cmd):
     return stdout , stderr
 
 
-# In[43]:
+# In[5]:
 
 
 import zlib
@@ -80,7 +80,7 @@ import hashlib
 hashlib.crc32 = crc32
 
 
-# In[44]:
+# In[6]:
 
 
 def hash_file(filename,tempDir=config["STORAGE"] + "\\temp\\"):
@@ -170,7 +170,7 @@ def hash_file(filename,tempDir=config["STORAGE"] + "\\temp\\"):
     return hashResult
 
 
-# In[45]:
+# In[7]:
 
 
 import re,os
@@ -192,7 +192,7 @@ def getAllDisksMount():
 getAllDisksMount()
 
 
-# In[46]:
+# In[8]:
 
 
 def listdir(path):
@@ -257,7 +257,7 @@ def walkdirs(path):
             x=0
 
 
-# In[47]:
+# In[9]:
 
 
 def __Worker_Backup():
@@ -339,7 +339,7 @@ def __Worker_Backup():
                 None
 
 
-# In[48]:
+# In[10]:
 
 
 def __Worker_Backup_START():
@@ -357,27 +357,27 @@ def __Worker_Backup_START():
         return '{"result":"OK"}'
 
 
-# In[49]:
+# In[11]:
 
 
 # https://htmx.org/examples/
 # flask
 
 
-# In[50]:
+# In[12]:
 
 
 if debug:
     get_ipython().run_line_magic('pip', 'install flask')
 
 
-# In[51]:
+# In[13]:
 
 
 import os
 
 
-# In[52]:
+# In[14]:
 
 
 from flask import Flask , Response , redirect
@@ -407,16 +407,14 @@ def __Worker_Backup_Status( ):  # pragma: no cover
     return __Worker_Backup_START()
 
 app.debug = True
-launcher = lambda: [ app.run(host='127.0.0.1',port=18080) for x in range( 3 ) ]
+__main__ = lambda: app.run(host='127.0.0.1',port=18080)
 
 if debug:
     from threading import Thread
-    Thread(target=launcher, args=() ).start()
-def __main__():
-    launcher()
+    Thread( target=__main__, args=() ).start()
 
 
-# In[53]:
+# In[15]:
 
 
 def get_resource( path ):  # pragma: no cover
@@ -433,13 +431,7 @@ def get_resource( path ):  # pragma: no cover
         return Response( status=404 )
 
 
-# In[ ]:
-
-
-
-
-
-# In[54]:
+# In[16]:
 
 
 # @app.root()
@@ -448,7 +440,7 @@ def get_resource( path ):  # pragma: no cover
         # return f_io.read()
 
 
-# In[55]:
+# In[17]:
 
 
 def HTMLRoot():
