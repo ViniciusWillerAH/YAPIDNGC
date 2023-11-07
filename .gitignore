@@ -5,3 +5,5 @@ temp/*
 app.py
 SHA256_SHA1_MD5
 SHA256_SHA1_MD5/*
+node_modules
+node_modules/*
