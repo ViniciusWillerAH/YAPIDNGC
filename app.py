@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[20]:
+# In[1]:
 
 
 try:
@@ -14,15 +14,15 @@ except:
     get_ipython().system('move __main__.py app.py')
 
 
-# In[2]:
+# In[ ]:
 
 
-import time
+import time , datetime
 _ScriptStartAt = time.time()
 now = lambda:datetime.datetime.now().strftime("%Y%m%d%H%M%S_%f")
 
 
-# In[3]:
+# In[ ]:
 
 
 config = {
@@ -32,7 +32,7 @@ config = {
 } 
 
 
-# In[4]:
+# In[ ]:
 
 
 def spawn2stdout(cmd):
@@ -52,7 +52,7 @@ def spawn2stdout(cmd):
     return stdout , stderr
 
 
-# In[5]:
+# In[ ]:
 
 
 import zlib
@@ -80,10 +80,23 @@ import hashlib
 hashlib.crc32 = crc32
 
 
-# In[6]:
+# In[ ]:
+
+
+def trycatch(func,errfunc):
+    try:
+        return func()
+    except Exception as e:
+        if errfunc:
+            return errfunc(e)
+        return e
+
+
+# In[ ]:
 
 
 def hash_file(filename,tempDir=config["STORAGE"] + "\\temp\\"):
+    import os, os.path as path
     assert path.isfile(filename) , "File not found for hash operation"
 
     class length():
@@ -170,7 +183,7 @@ def hash_file(filename,tempDir=config["STORAGE"] + "\\temp\\"):
     return hashResult
 
 
-# In[7]:
+# In[ ]:
 
 
 import re,os
@@ -192,7 +205,7 @@ def getAllDisksMount():
 getAllDisksMount()
 
 
-# In[8]:
+# In[ ]:
 
 
 def listdir(path):
@@ -257,11 +270,17 @@ def walkdirs(path):
             x=0
 
 
-# In[9]:
+# In[ ]:
+
+
+listaArquivos = set()
+
+
+# In[ ]:
 
 
 def __Worker_Backup():
-    listaArquivos = set()
+    import random , datetime
 
     fNameBkp = "Mapping_" + str(_ScriptStartAt) + "_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S_%f_") + str( random.randint(0,99999) ).zfill(5) + ".csv"
     with open( config["STORAGE"] + "\\"+ fNameBkp,"ab" ) as f_io:
@@ -279,7 +298,7 @@ def __Worker_Backup():
                         stat = os.stat( filePath )
                         fileStats = [ [ "n_fields" , stat.n_fields ] ,[ "n_sequence_fields" , stat.n_sequence_fields ] ,[ "n_unnamed_fields" , stat.n_unnamed_fields ] ,[ "st_atime" , stat.st_atime ] ,[ "st_atime_ns" , stat.st_atime_ns ] ,[ "st_ctime" , stat.st_ctime ] ,[ "st_ctime_ns" , stat.st_ctime_ns ] ,[ "st_dev" , stat.st_dev ] ,[ "st_file_attributes" , stat.st_file_attributes ] ,[ "st_gid" , stat.st_gid ] ,[ "st_ino" , stat.st_ino ] ,[ "st_mode" , stat.st_mode ] ,[ "st_mtime" , stat.st_mtime ] ,[ "st_mtime_ns" , stat.st_mtime_ns ] ,[ "st_nlink" , stat.st_nlink ] ,[ "st_reparse_tag" , stat.st_reparse_tag ] ,[ "st_size" , stat.st_size ] ,[ "st_uid" , stat.st_uid ] ]
                         fileSize = stat.st_size
-                        if ( filePath + str(stat.st_ctime_ns) ) in listaArquivos:
+                        if ( filePath + str(stat.st_ctime_ns) + str(stat.st_mtime_ns) ) in listaArquivos:
                             continue
 
                         ### All Green, lets hash the file, then copy it to the backup folder
@@ -298,11 +317,12 @@ def __Worker_Backup():
 
                         temporarily = copyFPath
                         StoragePath = os.path.join( config["STORAGE"] , "SHA256_SHA1_MD5" , sha256[0:2] , sha256[2:4] , sha256 + "_" + sha1 + "_" + md5  )
-                        
+
+                        os.makedirs( os.path.dirname( StoragePath ) , exist_ok=True )                        
                         trycatch( lambda: spawn2stdout( 'cmd /c move "'+temporarily+'" "'+StoragePath+'" ' ) )
 
-                        try:    listaArquivos.add( ( filePath + str(stat.st_ctime_ns) ) )
-                        except: listaArquivos.append( ( filePath + str(stat.st_ctime_ns) ) )
+                        try:    listaArquivos.add( ( filePath + str(stat.st_ctime_ns) + str(stat.st_mtime_ns) ) )
+                        except: listaArquivos.append( ( filePath + str(stat.st_ctime_ns) + str(stat.st_mtime_ns) ) )
 
 
                         filehashed_Count+=1 ### tell the script that at least one file was hashed
@@ -327,7 +347,6 @@ def __Worker_Backup():
                             (22, 'The symbolic link cannot be followed because its type is disabled'),
                             (22, 'An unexpected network error occurred'),
                             (22, 'The semaphore timeout period has expired'),                            
-                            
                         ]:
                             continue
 
@@ -339,9 +358,10 @@ def __Worker_Backup():
                 None
 
 
-# In[10]:
+# In[ ]:
 
 
+thread1 = None
 def __Worker_Backup_START():
     global thread1
     try:
@@ -351,33 +371,39 @@ def __Worker_Backup_START():
         return '{"result":"RunningAlready"}'
     except:
         from threading import Thread
-        thread1 = Thread(target=__Worker_Backup,args=())
+        thread1 = Thread( target=__Worker_Backup , args=() )
         thread1.start()
         # print(" Thread has \033[95m STARTED \033[1;0m Running")
         return '{"result":"OK"}'
 
 
-# In[11]:
+# In[ ]:
+
+
+__Worker_Backup_START()
+
+
+# In[ ]:
 
 
 # https://htmx.org/examples/
 # flask
 
 
-# In[12]:
+# In[ ]:
 
 
 if debug:
     get_ipython().run_line_magic('pip', 'install flask')
 
 
-# In[13]:
+# In[ ]:
 
 
 import os
 
 
-# In[14]:
+# In[ ]:
 
 
 from flask import Flask , Response , redirect
@@ -397,7 +423,7 @@ def __get_resource( path ):  # pragma: no cover
     return get_resource( path )
 
 @app.route('/api/v0/status')
-def __status( path ):  # pragma: no cover
+def __status():  # pragma: no cover
     global status
     return status
 
@@ -407,14 +433,14 @@ def __Worker_Backup_Status( ):  # pragma: no cover
     return __Worker_Backup_START()
 
 app.debug = True
-__main__ = lambda: app.run(host='127.0.0.1',port=18080)
+__main__ = lambda: app.run( host='127.0.0.1' , port=18080 , debug=True )
 
 if debug:
     from threading import Thread
     Thread( target=__main__, args=() ).start()
 
 
-# In[15]:
+# In[ ]:
 
 
 def get_resource( path ):  # pragma: no cover
@@ -431,7 +457,7 @@ def get_resource( path ):  # pragma: no cover
         return Response( status=404 )
 
 
-# In[16]:
+# In[ ]:
 
 
 # @app.root()
@@ -440,7 +466,7 @@ def get_resource( path ):  # pragma: no cover
         # return f_io.read()
 
 
-# In[17]:
+# In[ ]:
 
 
 def HTMLRoot():
