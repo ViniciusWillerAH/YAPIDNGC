@@ -2,7 +2,24 @@
     <head>
         <title> SeiLá Backups </title>
         <meta charset="utf-8">
-        <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+        <!--<script src="https://unpkg.com/htmx.org@1.9.9"></script>-->
+        <script>
+            function getAndReplaceInnerHTML(url, elementId) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var element = document.getElementById(elementId).innerHTML = xhr.responseText;
+                        } else {
+                            console.error('Request failed with status ' + xhr.status);
+                        }
+                    }
+                };
+                xhr.open('GET', url, true);
+                xhr.send();
+            }
+            <!--<nav style="  gap: 30px;  flex: 0 0 auto;  display: flex;  align-items: center;  flex-direction: row;  padding-right: 40px;">
+        </script>
         <style>
             html {  line-height: 1.15; }
             body {  margin: 0; }
@@ -17,6 +34,7 @@
             img {  display: block; }
         </style>
     </head>
+    
     <body style="height: 100%;width: 100%;display: flex;align-items: center;flex-direction: column;background-color: #ffffff;">
 
         <header style="width: 100%;  height: 50px;  display: flex;  z-index: 100;  align-self: center;  align-items: center;  justify-content: space-between;  background: #000;  color: #fff;">
@@ -30,6 +48,7 @@
                 <button class="navLink" hx-get="/tab3" role="tab" aria-selected="false" aria-controls="content">Backups</button>
             </div>
 
+            
             <!--<nav style="  gap: 30px;  flex: 0 0 auto;  display: flex;  align-items: center;  flex-direction: row;  padding-right: 40px;">
                 <span class="navLink">Status</span>
                 <span class="navLink">Current</span>
@@ -40,9 +59,7 @@
         <div id="content" style="height: 85vh;overflow-y: scroll;">
             <div style="padding: 100px;">
                 <div id="content" role="tabpanel" class="content">
-                    Esse programa tem absulutamente porra nenhuma. 
-                    <br>
-                    faça o seguinte. clique nos menus acimas e decida voce mesmo.
+                    Selecione uma das opções no menu acimas.
                 </div>
             </div>
         </div>
