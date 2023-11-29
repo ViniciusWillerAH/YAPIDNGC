@@ -38,9 +38,8 @@
             <h2 style="font-size: 32px;  font-style: normal;  font-weight: 600;  line-height: 45px;">{{{PageName}}}</h2>
             <!--<div style="gap: 30px;  flex: 0 0 auto;  display: flex;  align-items: center;  flex-direction: row;  padding-right: 40px;">-->
             <div id="tabs" hx-target="#contents" role="tablist" _="on htmx:afterOnLoad set @aria-selected of <[aria-selected=true]/> to false tell the target take .selected set @aria-selected to true">
-                <button class="navLink" onclick="getAndReplaceInnerHTML('content','/api/v0/status')">Status</button>
-                <button class="navLink" onclick="getAndReplaceInnerHTML('content','/api/v0/Current')">Current</button>
-                <button class="navLink" onclick="getAndReplaceInnerHTML('content','/api/v0/status')">Backups</button>
+                <button class="navLink" onclick="getAndReplaceInnerHTML('content','/api/v0/Current')">Current Status</button>
+                <button class="navLink" onclick="getAndReplaceInnerHTML('content','/api/v0/Backups')">Previous Backups</button>
             </div>
         </header>
         <div id="content" style="height: 85vh;overflow-y: scroll;">
